@@ -67,6 +67,9 @@ const palette = [
 
 function generate(){
 
+    const container = document.getElementById('cloud');
+    container.innerHTML = "";
+
     const lines = document.getElementById('input').value.trim().split('\n');
 
     let items=[];
@@ -90,18 +93,31 @@ function generate(){
         return [x.txt,size];
     });
 
-    document.getElementById("cloud").innerHTML="";
-
-    WordCloud(document.getElementById('cloud'),{
+    WordCloud(container,{
         list:list,
         fontFamily:'Fredoka',
         rotateRatio:0.15,
         gridSize:8,
         weightFactor:1,
         backgroundColor:'#ffffff',
-        color:function(){
-            return palette[Math.floor(Math.random()*palette.length)];
+
+        color: function() {
+            const palette = [
+                "#E63946",
+                "#D62828",
+                "#F77F00",
+                "#FCBF49",
+                "#FF6B35",
+                "#E85D04",
+                "#9D0208",
+                "#6A040F",
+                "#F48C06",
+                "#DC2F02"
+            ];
+
+            return palette[Math.floor(Math.random() * palette.length)];
         },
+
         drawOutOfBound:false,
         shrinkToFit:true
     });
