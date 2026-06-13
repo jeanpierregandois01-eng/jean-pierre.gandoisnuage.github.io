@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Nuage de mots V2</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.min.js"></script>
+
+<style>
+body{
+    font-family:'Fredoka',sans-serif;
+    max-width:1300px;
+    margin:auto;
+    padding:20px;
+}
+textarea{
+    width:100%;
+    height:220px;
+    font-family:'Fredoka',sans-serif;
+}
+#cloud{
+    width:100%;
+    height:800px;
+    border:1px solid #ddd;
+}
+button{
+    padding:10px 20px;
+    margin:10px 5px;
+    font-family:'Fredoka',sans-serif;
+}
+</style>
+</head>
+<body>
+
+<h2>Nuage de mots (expressions conservées)</h2>
+
+<textarea id="input">Réseaux sociaux;50
+Service client;35
+Qualité des produits;25
+Prix attractifs;15
+Livraison rapide;8</textarea>
+
+<br>
+<button onclick="generate()">Générer</button>
+
+<div id="cloud"></div>
+
+<script>
+
+const palette = [
+"#4F46E5",
+"#6366F1",
+"#818CF8",
+"#A5B4FC",
+"#C7D2FE",
+"#2563EB",
+"#3B82F6",
+"#60A5FA",
+"#93C5FD",
+"#BFDBFE"
+];
+
+function generate(){
+
+    const lines = document.getElementById('input').value.trim().split('\n');
+
+    let items=[];
+    let maxWeight=0;
+
+    lines.forEach(line=>{
+        const p=line.split(';');
+        if(p.length>=2){
+            const txt=p[0].trim();
+            const weight=parseFloat(p[1]);
+
+            if(!isNaN(weight)){
+                maxWeight=Math.max(maxWeight,weight);
+                items.push({txt,weight});
+            }
+        }
+    });
+
+    const list=items.map(x=>{
+        const size = 20 + (120 * x.weight / maxWeight);
+        return [x.txt,size];
+    });
+
+    document.getElementById("cloud").innerHTML="";
+
+    WordCloud(document.getElementById('cloud'),{
+        list:list,
+        fontFamily:'Fredoka',
+        rotateRatio:0.15,
+        gridSize:8,
+        weightFactor:1,
+        backgroundColor:'#ffffff',
+        color:function(){
+            return palette[Math.floor(Math.random()*palette.length)];
+        },
+        drawOutOfBound:false,
+        shrinkToFit:true
+    });
+}
+
+generate();
+
+</script>
+</body>
+</html>
